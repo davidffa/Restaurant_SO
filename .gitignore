@@ -1,0 +1,12 @@
+.DS_Store
+.vscode/
+
+# Object files
+*.o
+
+# Executables
+run/probSemSharedMemRestaurant
+run/chef
+run/waiter
+run/group
+run/receptionist
