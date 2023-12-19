@@ -135,6 +135,7 @@ static void waitForOrder() {
 
   // TODO insert your code here
   sh->fSt.st.chefStat = COOK;
+  lastGroup = sh->fSt.foodGroup;
   saveState(nFic, &sh->fSt);
 
   if (semUp(semgid, sh->mutex) == -1) { /* exit critical region */
@@ -168,6 +169,7 @@ static void processOrder() {
   // TODO insert your code here
   sh->fSt.st.chefStat = WAIT_FOR_ORDER;
   sh->fSt.waiterRequest.reqType = FOODREADY;
+  sh->fSt.waiterRequest.reqGroup = lastGroup;
   saveState(nFic, &sh->fSt);
 
   if (semUp(semgid, sh->mutex) == -1) { /* exit critical region */
