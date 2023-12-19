@@ -188,7 +188,7 @@ static void informChef(int n) {
   // TODO insert your code here
   sh->fSt.st.waiterStat = INFORM_CHEF;
   sh->fSt.foodGroup = n;
-  sh->fSt.foodOrder++;
+  sh->fSt.foodOrder = 1;
   saveState(nFic, &sh->fSt);
 
   if (semUp(semgid, sh->mutex) == -1) /* exit critical region */
@@ -201,7 +201,7 @@ static void informChef(int n) {
   // Wakes up the chef
   semUp(semgid, WAITORDER);
   semDown(semgid, ORDERRECEIVED);
-  semUp(semgid, sh->requestReceived[n]);
+  semUp(semgid, sh->requestReceived[sh->fSt.assignedTable[n]]);
 }
 
 /**
@@ -228,5 +228,5 @@ static void takeFoodToTable(int n) {
     exit(EXIT_FAILURE);
   }
 
-  semUp(semgid, sh->foodArrived[n]);
+  semUp(semgid, sh->foodArrived[sh->fSt.assignedTable[n]]);
 }
