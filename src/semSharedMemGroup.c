@@ -314,6 +314,7 @@ static void checkOutAtReception(int id) {
   }
 
   // TODO insert your code here
+  semUp(semgid, RECEPTIONISTREQ);
   semDown(semgid, sh->tableDone[sh->fSt.assignedTable[id]]);
 
   if (semDown(semgid, sh->mutex) == -1) { /* enter critical region */
