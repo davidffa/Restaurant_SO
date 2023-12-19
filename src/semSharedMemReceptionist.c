@@ -289,13 +289,13 @@ static void receivePayment(int n) {
   int next_group = decideNextGroup();
 
   if (next_group != -1) {
-    sh->fSt.assignedTable[next_group] = sh->fSt.assignedTable[n];
+    groupRecord[n] = DONE;
     groupRecord[next_group] = ATTABLE;
+    sh->fSt.assignedTable[next_group] = sh->fSt.assignedTable[n];
     sh->fSt.groupsWaiting--;
   }
 
   saveState(nFic, &sh->fSt);
-  semUp(semgid, sh->waitForTable[next_group]);
 
   if (semUp(semgid, sh->mutex) == -1) { /* exit critical region */
     perror("error on the down operation for semaphore access (WT)");
@@ -303,5 +303,5 @@ static void receivePayment(int n) {
   }
 
   // TODO insert your code here
-  semUp(semgid, RECEPTIONISTREQUESTPOSSIBLE);
+  semUp(semgid, sh->waitForTable[next_group]);
 }
