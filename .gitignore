@@ -10,3 +10,6 @@ run/chef
 run/waiter
 run/group
 run/receptionist
+
+# Doxygen output
+doc/html
