@@ -124,12 +124,12 @@ int main(int argc, char *argv[]) {
 static void waitForOrder() {
   // TODO insert your code here
   if (semDown(semgid, WAITORDER) == -1) {
-    perror("error on the down operation for semaphore access");
+    perror("error on the down operation for semaphore access(CH-WAITORDER)");
     exit(EXIT_FAILURE);
   }
 
   if (semDown(semgid, sh->mutex) == -1) { /* enter critical region */
-    perror("error on the up operation for semaphore access (PT)");
+    perror("error on the down operation for semaphore access (CH)");
     exit(EXIT_FAILURE);
   }
 
@@ -139,12 +139,15 @@ static void waitForOrder() {
   saveState(nFic, &sh->fSt);
 
   if (semUp(semgid, sh->mutex) == -1) { /* exit critical region */
-    perror("error on the up operation for semaphore access (PT)");
+    perror("error on the up operation for semaphore access (CH)");
     exit(EXIT_FAILURE);
   }
 
   // TODO insert your code here
-  semUp(semgid, ORDERRECEIVED);
+  if (semUp(semgid, ORDERRECEIVED) == -1) {
+    perror("error on the up operation for semaphore access (CH-ORDERRECEIVED)");
+    exit(EXIT_FAILURE);
+  }
 }
 
 /**
@@ -159,10 +162,13 @@ static void processOrder() {
   usleep((unsigned int)floor((MAXCOOK * random()) / RAND_MAX + 100.0));
 
   // TODO insert your code here
-  semDown(semgid, WAITERREQUESTPOSSIBLE);
+  if (semDown(semgid, WAITERREQUESTPOSSIBLE) == -1) {
+    perror("error on the down operation for semaphore access (CH-WAITERREQUESTPOSSIBLE)");
+    exit(EXIT_FAILURE);
+  }
 
   if (semDown(semgid, sh->mutex) == -1) { /* enter critical region */
-    perror("error on the up operation for semaphore access (PT)");
+    perror("error on the down operation for semaphore access (CH)");
     exit(EXIT_FAILURE);
   }
 
@@ -173,10 +179,13 @@ static void processOrder() {
   saveState(nFic, &sh->fSt);
 
   if (semUp(semgid, sh->mutex) == -1) { /* exit critical region */
-    perror("error on the up operation for semaphore access (PT)");
+    perror("error on the up operation for semaphore access (CH)");
     exit(EXIT_FAILURE);
   }
 
   // TODO insert your code here
-  semUp(semgid, WAITERREQUEST);
+  if (semUp(semgid, WAITERREQUEST) == -1) {
+    perror("error on the up operation for semaphore access (CH-WAITERREQUEST)");
+    exit(EXIT_FAILURE);
+  }
 }
