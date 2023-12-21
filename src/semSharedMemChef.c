@@ -176,6 +176,7 @@ static void processOrder() {
   sh->fSt.st.chefStat = WAIT_FOR_ORDER;
   sh->fSt.waiterRequest.reqType = FOODREADY;
   sh->fSt.waiterRequest.reqGroup = lastGroup;
+  sh->fSt.foodOrder = 0;
   saveState(nFic, &sh->fSt);
 
   if (semUp(semgid, sh->mutex) == -1) { /* exit critical region */
