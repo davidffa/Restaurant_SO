@@ -214,8 +214,7 @@ static request waitForGroup() {
   }
 
   // TODO insert your code here
-  ret.reqGroup = sh->fSt.receptionistRequest.reqGroup;
-  ret.reqType = sh->fSt.receptionistRequest.reqType;
+  ret = sh->fSt.receptionistRequest;
 
   if (semUp(semgid, sh->mutex) == -1) { /* exit critical region */
     perror("error on the down operation for semaphore access (WT)");
@@ -289,9 +288,9 @@ static void receivePayment(int n) {
   int next_group = decideNextGroup();
 
   if (next_group != -1) {
-    groupRecord[n] = DONE;
     groupRecord[next_group] = ATTABLE;
     sh->fSt.assignedTable[next_group] = sh->fSt.assignedTable[n];
+    sh->fSt.assignedTable[n] = -1;
     sh->fSt.groupsWaiting--;
   }
 
@@ -303,5 +302,7 @@ static void receivePayment(int n) {
   }
 
   // TODO insert your code here
-  semUp(semgid, sh->waitForTable[next_group]);
+  if (next_group != -1) {
+    semUp(semgid, sh->waitForTable[next_group]);
+  }
 }
