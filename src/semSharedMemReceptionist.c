@@ -302,10 +302,9 @@ static void receivePayment(int n) {
   if (next_group != -1) {
     groupRecord[next_group] = ATTABLE;
     sh->fSt.assignedTable[next_group] = sh->fSt.assignedTable[n];
-    sh->fSt.assignedTable[n] = -1;
     sh->fSt.groupsWaiting--;
   }
-
+  sh->fSt.assignedTable[n] = -1;
   saveState(nFic, &sh->fSt);
 
   if (semUp(semgid, sh->mutex) == -1) { /* exit critical region */
